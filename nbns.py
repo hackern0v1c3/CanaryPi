@@ -9,7 +9,7 @@ import string
 import ipaddress
 
 # Global variables
-SLEEP_TIME = 10 # number of seconds to sleep between requests
+SLEEP_TIME = os.environ['NBNS_SLEEP'] # number of seconds to sleep between requests
 BROADCAST_IP = os.environ['BROADCAST_IP'] # get broadcast address from docker environmental variable
 
 # Verify the provided broadcast address.
@@ -26,15 +26,15 @@ except:
 
 # Function to generate random hostnames between with a length of 1-15 per netbios spec
 # https://en.wikipedia.org/wiki/NetBIOS
-def generateName():
-    stringLength = random.randint(1, 15)
-    lettersAndDigits = string.ascii_letters + string.digits
-    return ''.join(random.choice(lettersAndDigits) for i in range(stringLength))
+def generate_name():
+    string_length = random.randint(1, 15)
+    letters_and_digits = string.ascii_letters + string.digits
+    return ''.join(random.choice(letters_and_digits) for i in range(string_length))
 
 # Function to send requests
 def sender():
     while 1:
-        query_name = generateName()
+        query_name = generate_name()
         pkt = IP(dst=BROADCAST_IP)/UDP(sport=137, dport='netbios_ns')/NBNSQueryRequest(SUFFIX="file server service",QUESTION_NAME=query_name, QUESTION_TYPE='NB')
         send (pkt, verbose=0)
         time.sleep(SLEEP_TIME)
