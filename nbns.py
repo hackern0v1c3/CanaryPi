@@ -7,22 +7,28 @@ import threading
 import random
 import string
 import ipaddress
+import logger
 
 # Global variables
-SLEEP_TIME = os.environ['NBNS_SLEEP'] # number of seconds to sleep between requests
+
+try:
+    SLEEP_TIME = int(os.environ['NBNS_SLEEP']) # number of seconds to sleep between requests
+except:
+    logger.error("Invalid netbios sleep time provided.  Must be int")
+    exit(1)
 BROADCAST_IP = os.environ['BROADCAST_IP'] # get broadcast address from docker environmental variable
 
 # Verify the provided broadcast address.
 if BROADCAST_IP == '':
-    print("You must supply a value for BROADCAST_IP in the container startup command.")
-    print("Example -e BROADCAST_IP=192.168.1.255")
-    exit()
+    logger.error("You must supply a value for BROADCAST_IP in the container startup command.")
+    logger.error("Example -e BROADCAST_IP=192.168.1.255")
+    exit(1)
 
 try:
     ipaddress.ip_address(BROADCAST_IP)
 except:
-    print(f'{BROADCAST_IP} is not a valid ip address')
-    exit()
+    logger.error(f'{BROADCAST_IP} is not a valid ip address')
+    exit(1)
 
 # Function to generate random hostnames between with a length of 1-15 per netbios spec
 # https://en.wikipedia.org/wiki/NetBIOS
@@ -46,7 +52,7 @@ def get_packet(pkt):
     if pkt.FLAGS == 0x8500:
         # Get the machine name from the NBNS response
         response_name = str(pkt.getlayer(NBNSQueryRequest).QUESTION_NAME).split("'")[1].rstrip()
-        print(f'A spoofed NBNS response for {response_name} was detected by from host {pkt.getlayer(IP).src} - {pkt.getlayer(Ether).src}')
+        logger.warning(f'A spoofed NBNS response for {response_name} was detected by from host {pkt.getlayer(IP).src} - {pkt.getlayer(Ether).src}')
 
 #Function for starting sniffing
 def listen():
@@ -56,18 +62,18 @@ def listen():
 def main():
     try:
         try:
-            print ("Starting UDP Response Server...")
+            logger.info("Starting UDP Response Server...")
             threading.Thread(target=listen).start()
-            print ("Starting NBNS Request Thread...")
+            logger.info("Starting NBNS Request Thread...")
             threading.Thread(target=sender).start()
         except KeyboardInterrupt:
-            print ("\nStopping Server and Exiting...\n")
+            logger.warning("\nStopping Server and Exiting...\n")
         except:
-            print ("Server could not be started, confirm you're running this as root.\n")
+            logger.error("Server could not be started, confirm you're running this as root.\n")
     except KeyboardInterrupt:
-        exit()
+        exit(0)
     except:
-        print ("Server could not be started, confirm you're running this as root.\n")
+        logger.error("Server could not be started, confirm you're running this as root.\n")
 
 # Launch main
 main()

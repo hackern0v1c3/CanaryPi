@@ -5,10 +5,15 @@ from scapy.all import *
 import threading
 import random
 import string
+import logger
 
 # Global variables
+try:
+    SLEEP_TIME = int(os.environ['LLMNR_SLEEP']) # number of seconds to sleep between requests
+except:
+    logger.error("Invalid llmnr sleep time provided.  Must be int")
+    exit(1)
 DESTINATION_IP = '224.0.0.252' # multicast address for LLMNR
-SLEEP_TIME = os.environ['LLMNR_SLEEP'] # number of seconds to sleep between requests
 
 # Function to generate random hostnames
 # Used microsofts DNS naming conventions https://support.microsoft.com/en-us/help/909264/naming-conventions-in-active-directory-for-computers-domains-sites-and
@@ -35,7 +40,7 @@ def get_packet(pkt):
     if (pkt.qr == 1) & (pkt.opcode == 0) & (pkt.c == 0) & (pkt.tc == 0) & (pkt.rcode == 0):
         # Get the machine name from the LLMNR response
         response_name = str(pkt.qd.qname, 'utf-8')
-        print(f'A spoofed LMNR response for {response_name} was detected by from host {pkt.getlayer(IP).src} - {pkt.getlayer(Ether).src}')
+        logger.warning(f'A spoofed LMNR response for {response_name} was detected by from host {pkt.getlayer(IP).src} - {pkt.getlayer(Ether).src}')
 
 #Function for starting sniffing
 def listen():
@@ -45,18 +50,18 @@ def listen():
 def main():
     try:
         try:
-            print ("Starting UDP Response Server...")
+            logger.info("Starting UDP Response Server...")
             threading.Thread(target=listen).start()
-            print ("Starting LLMNR Request Thread...")
+            logger.info("Starting LLMNR Request Thread...")
             threading.Thread(target=sender).start()
         except KeyboardInterrupt:
-            print ("\nStopping Server and Exiting...\n")
+            logger.warning("\nStopping Server and Exiting...\n")
         except:
-            print ("Server could not be started, confirm you're running this as root.\n")
+            logger.error("Server could not be started, confirm you're running this as root.\n")
     except KeyboardInterrupt:
-        exit()
+        exit(0)
     except:
-        print ("Server could not be started, confirm you're running this as root.\n")
+        logger.error("Server could not be started, confirm you're running this as root.\n")
 
 # Launch main
 main()
