@@ -62,7 +62,7 @@ def listen():
 def init():
     try:
         try:
-            logger.info("Starting UDP Response Server...")
+            logger.info("Starting NBNS UDP Response Server...")
             threading.Thread(target=listen).start()
             logger.info("Starting NBNS Request Thread...")
             threading.Thread(target=sender).start()
