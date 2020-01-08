@@ -35,7 +35,7 @@ if validate_log_level(console_log_level):
     console_logger.addHandler(console_handler)
 else:
     print("Invalid log level provided for console logging.  Must be debug, info, warning, error, or critical")
-    exit()
+    exit(1)
 
 # Verify a valid logging level was provided for file logging
 file_log_level = str(os.environ['FILE_LOG_LEVEL']).upper()
@@ -43,7 +43,7 @@ if validate_log_level(file_log_level):
     file_logger.setLevel(file_log_level)
 else:
     console_logger.critical("Invalid log level provided for file logging.  Must be debug, info, warning, error, or critical")
-    exit()
+    exit(1)
 
 # Setup file logging options
 try:
@@ -53,4 +53,4 @@ try:
     file_logger.addHandler(file_handler)
 except:
     console_logger.critical("Invalid log retention provided.  Must be int")
-    exit()
+    exit(1)
