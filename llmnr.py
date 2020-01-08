@@ -8,21 +8,21 @@ import string
 
 # Global variables
 DESTINATION_IP = '224.0.0.252' # multicast address for LLMNR
-SLEEP_TIME = 10 # number of seconds to sleep between requests
+SLEEP_TIME = os.environ['LLMNR_SLEEP'] # number of seconds to sleep between requests
 
 # Function to generate random hostnames
 # Used microsofts DNS naming conventions https://support.microsoft.com/en-us/help/909264/naming-conventions-in-active-directory-for-computers-domains-sites-and
-def generateName():
-    stringLength = random.randint(2, 63)
-    lettersAndDigits = string.ascii_letters + string.digits + '.'
-    return ''.join(random.choice(lettersAndDigits) for i in range(stringLength))
+def generate_name():
+    string_length = random.randint(2, 63)
+    letters_and_digits = string.ascii_letters + string.digits + '.'
+    return ''.join(random.choice(letters_and_digits) for i in range(string_length))
 
 # Function to send requests
 def sender():
     while 1:
         source_port = random.randint(49152, 65535)
         id = random.randint(1, 65535)
-        query_name = generateName()
+        query_name = generate_name()
         pkt = IP(dst=DESTINATION_IP, ttl=1)/UDP(sport=source_port,dport=5355)/LLMNRQuery(id=id, qr=0, qdcount=1, ancount=0, nscount=0, arcount=0, qd=DNSQR(qname=query_name))
 
         send (pkt, verbose=0)
