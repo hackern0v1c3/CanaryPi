@@ -47,7 +47,7 @@ def listen():
     sniff(filter="udp and port 5355",store=0,prn=get_packet)
 
 # Main function
-def main():
+def init():
     try:
         try:
             logger.info("Starting UDP Response Server...")
@@ -62,6 +62,3 @@ def main():
         exit(0)
     except:
         logger.error("Server could not be started, confirm you're running this as root.\n")
-
-# Launch main
-main()
