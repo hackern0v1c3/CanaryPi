@@ -66,11 +66,9 @@ def init():
             threading.Thread(target=listen).start()
             logger.info("Starting NBNS Request Thread...")
             threading.Thread(target=sender).start()
-        except KeyboardInterrupt:
-            logger.warning("\nStopping Server and Exiting...\n")
         except:
             logger.error("Server could not be started, confirm you're running this as root.\n")
-    except KeyboardInterrupt:
-        exit(0)
+            exit(1)
     except:
         logger.error("Server could not be started, confirm you're running this as root.\n")
+        exit(1)
