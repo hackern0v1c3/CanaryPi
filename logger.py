@@ -55,33 +55,23 @@ except:
     console_logger.critical("Invalid log retention provided.  Must be int")
     exit(1)
 
-# Setup a function for easily logging to console and file at the same time.
-# This repeats the verify function above and should be refactored
-def write_log(level, message):
-    level = level.upper()
+# Setup functions for easily logging to console and file at the same time.
+def debug(message):
+    console_logger.debug(message)
+    file_logger.debug(message)
 
-    if level == 'DEBUG':
-        console_logger.debug(message)
-        file_logger.debug(message)
-        return True
-    elif level == 'INFO':
-        console_logger.info(message)
-        file_logger.info(message)
-        return True
-    elif level == 'WARNING':
-        console_logger.warning(message)
-        file_logger.warning(message)
-        return True
-    elif level == 'ERROR':
-        console_logger.error(message)
-        file_logger.error(message)
-        return True
-    elif level == 'CRITICAL':
-        console_logger.critical(message)
-        file_logger.critical(message)
-        return True
-    else:
-        console_logger.error("Unable to log message.  Must be debug, info, warning, error, or critical")
-        file_logger.error("Unable to log message.  Must be debug, info, warning, error, or critical")
-        return False
+def info(message):
+    console_logger.info(message)
+    file_logger.info(message)
 
+def warning(message):
+    console_logger.warning(message)
+    file_logger.warning(message)
+
+def error(message):
+    console_logger.error(message)
+    file_logger.error(message)
+
+def critical(message):
+    console_logger.critical(message)
+    file_logger.critical(message)
