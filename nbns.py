@@ -6,10 +6,23 @@ from scapy.all import *
 import threading
 import random
 import string
+import ipaddress
 
 # Global variables
-DESTINATION_IP = '224.0.0.252' # multicast address for netbios
 SLEEP_TIME = 10 # number of seconds to sleep between requests
+BROADCAST_IP = os.environ['BROADCAST_IP'] # get broadcast address from docker environmental variable
+
+# Verify the provided broadcast address.
+if BROADCAST_IP == '':
+    print("You must supply a value for BROADCAST_IP in the container startup command.")
+    print("Example -e BROADCAST_IP=192.168.1.255")
+    exit()
+
+try:
+    ipaddress.ip_address(BROADCAST_IP)
+except:
+    print(f'{BROADCAST_IP} is not a valid ip address')
+    exit()
 
 # Function to generate random hostnames between with a length of 1-15 per netbios spec
 # https://en.wikipedia.org/wiki/NetBIOS
@@ -22,7 +35,7 @@ def generateName():
 def sender():
     while 1:
         query_name = generateName()
-        pkt = IP(dst=DESTINATION_IP)/UDP(sport=137, dport='netbios_ns')/NBNSQueryRequest(SUFFIX="file server service",QUESTION_NAME=query_name, QUESTION_TYPE='NB')
+        pkt = IP(dst=BROADCAST_IP)/UDP(sport=137, dport='netbios_ns')/NBNSQueryRequest(SUFFIX="file server service",QUESTION_NAME=query_name, QUESTION_TYPE='NB')
         send (pkt, verbose=0)
         time.sleep(SLEEP_TIME)
 
