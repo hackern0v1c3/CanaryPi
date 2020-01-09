@@ -9,27 +9,6 @@ import string
 import ipaddress
 import logger
 
-# Global variables
-
-try:
-    SLEEP_TIME = int(os.environ['NBNS_SLEEP']) # number of seconds to sleep between requests
-except:
-    logger.error("Invalid netbios sleep time provided.  Must be int")
-    exit(1)
-BROADCAST_IP = os.environ['BROADCAST_IP'] # get broadcast address from docker environmental variable
-
-# Verify the provided broadcast address.
-if BROADCAST_IP == '':
-    logger.error("You must supply a value for BROADCAST_IP in the container startup command.")
-    logger.error("Example -e BROADCAST_IP=192.168.1.255")
-    exit(1)
-
-try:
-    ipaddress.ip_address(BROADCAST_IP)
-except:
-    logger.error(f'{BROADCAST_IP} is not a valid ip address')
-    exit(1)
-
 # Function to generate random hostnames between with a length of 1-15 per netbios spec
 # https://en.wikipedia.org/wiki/NetBIOS
 def generate_name():
@@ -39,6 +18,27 @@ def generate_name():
 
 # Function to send requests
 def sender():
+    try:
+        SLEEP_TIME = int(os.environ['NBNS_SLEEP']) # number of seconds to sleep between requests
+    except:
+        logger.error("Invalid netbios sleep time provided.  Must be int")
+        exit(1)
+
+    BROADCAST_IP = os.environ['BROADCAST_IP'] # get broadcast address from docker environmental variable
+
+    # Verify the provided broadcast address.
+    if BROADCAST_IP == '':
+        logger.error("You must supply a value for BROADCAST_IP in the container startup command.")
+        logger.error("Example -e BROADCAST_IP=192.168.1.255")
+        exit(1)
+
+    try:
+        ipaddress.ip_address(BROADCAST_IP)
+    except:
+        logger.error(f'{BROADCAST_IP} is not a valid ip address')
+        exit(1)
+
+    # Send packets in loop
     while 1:
         query_name = generate_name()
         pkt = IP(dst=BROADCAST_IP)/UDP(sport=137, dport='netbios_ns')/NBNSQueryRequest(SUFFIX="file server service",QUESTION_NAME=query_name, QUESTION_TYPE='NB')

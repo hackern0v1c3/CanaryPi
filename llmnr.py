@@ -7,14 +7,6 @@ import random
 import string
 import logger
 
-# Global variables
-try:
-    SLEEP_TIME = int(os.environ['LLMNR_SLEEP']) # number of seconds to sleep between requests
-except:
-    logger.error("Invalid llmnr sleep time provided.  Must be int")
-    exit(1)
-DESTINATION_IP = '224.0.0.252' # multicast address for LLMNR
-
 # Function to generate random hostnames
 # Used microsofts DNS naming conventions https://support.microsoft.com/en-us/help/909264/naming-conventions-in-active-directory-for-computers-domains-sites-and
 def generate_name():
@@ -24,6 +16,14 @@ def generate_name():
 
 # Function to send requests
 def sender():
+    try:
+        SLEEP_TIME = int(os.environ['LLMNR_SLEEP']) # number of seconds to sleep between requests
+    except:
+        logger.error("Invalid llmnr sleep time provided.  Must be int")
+        exit(1)
+
+    DESTINATION_IP = '224.0.0.252' # multicast address for LLMNR
+
     while 1:
         source_port = random.randint(49152, 65535)
         id = random.randint(1, 65535)
