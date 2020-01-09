@@ -1,5 +1,15 @@
 FROM python:3
 
+RUN apt-get update && apt-get install -y --no-install-recommends tcpdump && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+VOLUME [ "/usr/src/app/logs" ]
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
 ARG BROADCAST_IP=''
 ENV BROADCAST_IP="${BROADCAST_IP}"
 ARG NBNS_SLEEP=30
@@ -16,15 +26,19 @@ ARG DISABLE_NBNS_SCANNING='F'
 ENV DISABLE_NBNS_SCANNING="${DISABLE_NBNS_SCANNING}"
 ARG DISABLE_LLMNR_SCANNING='F'
 ENV DISABLE_LLMNR_SCANNING="${DISABLE_LLMNR_SCANNING}"
-
-RUN apt-get update && apt-get install -y --no-install-recommends tcpdump && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /usr/src/app
-VOLUME [ "/usr/src/app/logs" ]
-
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
+ARG ENABLE_EMAIL_ALERTS='T'
+ENV ENABLE_EMAIL_ALERTS="${ENABLE_EMAIL_ALERTS}"
+ARG EMAIL_RECIPIENT=''
+ENV EMAIL_RECIPIENT="${EMAIL_RECIPIENT}"
+ARG EMAIL_SENDER=''
+ENV EMAIL_SENDER="${EMAIL_SENDER}"
+ARG EMAIL_SENDER_PASSWORD=''
+ENV EMAIL_SENDER_PASSWORD="${EMAIL_SENDER_PASSWORD}"
+ARG EMAIL_SERVER_ADDRESS='smtp.gmail.com'
+ENV EMAIL_SERVER_ADDRESS="${EMAIL_SERVER_ADDRESS}"
+ARG EMAIL_SERVER_PORT=587
+ENV EMAIL_SERVER_PORT="${EMAIL_SERVER_PORT}"
+ARG EMAIL_SERVER_STARTTLS='T'
+ENV EMAIL_SERVER_STARTTLS="${EMAIL_SERVER_STARTTLS}"
 
 CMD [ "python", "./main.py" ]
