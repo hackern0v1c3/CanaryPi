@@ -8,6 +8,7 @@ import random
 import string
 import ipaddress
 import logger
+import alert_handler
 
 # Function to generate random hostnames between with a length of 1-15 per netbios spec
 # https://en.wikipedia.org/wiki/NetBIOS
@@ -53,6 +54,9 @@ def get_packet(pkt):
         # Get the machine name from the NBNS response
         response_name = str(pkt.getlayer(NBNSQueryRequest).QUESTION_NAME).split("'")[1].rstrip()
         logger.warning(f'A spoofed NBNS response for {response_name} was detected by from host {pkt.getlayer(IP).src} - {pkt.getlayer(Ether).src}')
+
+        # Send message to alert handler
+        alert_handler.new_alert("nbns", pkt.getlayer(IP).src, pkt.getlayer(Ether).src, f'NBNS response for {response_name}')
 
 #Function for starting sniffing
 def listen():

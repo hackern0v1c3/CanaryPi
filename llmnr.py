@@ -6,6 +6,7 @@ import threading
 import random
 import string
 import logger
+import alert_handler
 
 # Function to generate random hostnames
 # Used microsofts DNS naming conventions https://support.microsoft.com/en-us/help/909264/naming-conventions-in-active-directory-for-computers-domains-sites-and
@@ -41,6 +42,9 @@ def get_packet(pkt):
         # Get the machine name from the LLMNR response
         response_name = str(pkt.qd.qname, 'utf-8')
         logger.warning(f'A spoofed LMNR response for {response_name} was detected by from host {pkt.getlayer(IP).src} - {pkt.getlayer(Ether).src}')
+
+        # Send message to alert handler
+        alert_handler.new_alert("llmnr", pkt.getlayer(IP).src, pkt.getlayer(Ether).src, f'LLMNR response for {response_name}')
 
 #Function for starting sniffing
 def listen():
