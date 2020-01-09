@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends tcpdump && rm -
 
 WORKDIR /usr/src/app
 VOLUME [ "/usr/src/app/logs" ]
+VOLUME [ "/usr/src/app/attacks" ]
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
@@ -44,5 +45,7 @@ ARG EMAIL_SERVER_PORT=587
 ENV EMAIL_SERVER_PORT="${EMAIL_SERVER_PORT}"
 ARG EMAIL_SERVER_STARTTLS='T'
 ENV EMAIL_SERVER_STARTTLS="${EMAIL_SERVER_STARTTLS}"
+ARG ATTACK_TIMEOUT_DURATION=3600
+ENV ATTACK_TIMEOUT_DURATION="${ATTACK_TIMEOUT_DURATION}"
 
 CMD [ "python", "./main.py" ]
