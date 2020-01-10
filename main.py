@@ -8,6 +8,7 @@ import alert_handler
 
 logger.info("Starting up")
 
+# Initialize the alert handler
 alert_handler.init()
 
 # If enabled send a test email at program startup
