@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-ARG BROADCAST_IP=''
+ARG BROADCAST_IP='224.0.0.252'
 ENV BROADCAST_IP="${BROADCAST_IP}"
 ARG NBNS_SLEEP=30
 ENV NBNS_SLEEP="${NBNS_SLEEP}"
