@@ -2,7 +2,7 @@
 Startup project to create a simple to deploy honey pot style detection tool for alerting on common network attacks.  This is currently and early alpha build used for public testing and feedback while it's further developed.
 
 # Requirements
-This container requires the --net=host option when starting.  At the time of writing this that option is only supported in linux so this container will not work on Windows or Mac Os hosts.  This is because the scripts need to send broadcast packets to the host network.
+This container requires the --net=host option when starting.  At the time of writing this that option is only supported in linux so this container will not work on Windows or Mac Os hosts.  This is because the scripts need to send broadcast packets to the host network.  The docker container is cross compiled using buildx so canarypi should be able to run on x86 or arm machines.
 
 # Plan
 I'm hoping to take some pre-existing tools and techniques for detecting common network attacks, like responder and port scanning, and package them in an easy to deploy tool.  I'm hoping this will help small IT teams that can't afford fancy security tools detect attacks on their network.
@@ -27,7 +27,7 @@ If you use the quickstart command below the logs will be located in /var/lib/doc
 The other volume /var/lib/docker/volumes/canary_logs/_data/ is just used for temporary files where attack info is stored during an attack.  When the attack is over the files in this folder are read into a summary and then delted.  You should use the logs, not these files, to look up attack history info.
 
 ```
-docker run -it --net=host \
+docker run -d --net=host \
 -e EMAIL_SENDER=address used to send alert emails \
 -e EMAIL_SENDER_PASSWORD=password for account used to send emails \
 -e EMAIL_RECIPIENT=address to receive alert emails \
