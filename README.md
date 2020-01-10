@@ -27,7 +27,8 @@ If you use the quickstart command below the logs will be located in /var/lib/doc
 The other volume /var/lib/docker/volumes/canary_logs/_data/ is just used for temporary files where attack info is stored during an attack.  When the attack is over the files in this folder are read into a summary and then delted.  You should use the logs, not these files, to look up attack history info.
 
 ```
-docker run -d --net=host \
+docker run -dit --net=host \
+--restart unless-stopped \
 -e EMAIL_SENDER=address used to send alert emails \
 -e EMAIL_SENDER_PASSWORD=password for account used to send emails \
 -e EMAIL_RECIPIENT=address to receive alert emails \
@@ -79,6 +80,11 @@ For instance adding this would disable NBNS spoof detection
 |EMAIL_SENDER|False||The email address that will be used to send email notifications. Only requied if ENABLE_EMAIL_ALERTS is True|
 |EMAIL_SENDER_PASSWORD|False||The password for the email address used to send email notifications.  Only requied if ENABLE_EMAIL_ALERTS is True and ENABLE_EMAIL_SERVER_AUTHENTICATION is set to True|
 
+
+#### Misc Parameters
+| Name | Required | Default Value | Description |
+|------|----------|---------------|-------------|
+|ATTACK_TIMEOUT_DURATION|False|3600|The ammount of innactivity time, in seconds, before an attack is considered over.  So by default if an attack was started, but hasn't been detected for over an hour, it is considered over.  You will be notified based on your logging and email settings.|
 
 # Credit
 I am building on the shoulders of giants.  Lots of credit to these guys who I 'borrowed' a lot of code from
