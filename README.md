@@ -7,6 +7,17 @@ This container requires the --net=host option when starting.  At the time of wri
 # Plan
 I'm hoping to take some pre-existing tools and techniques for detecting common network attacks, like responder and port scanning, and package them in an easy to deploy tool.  I'm hoping this will help small IT teams that can't afford fancy security tools detect attacks on their network.
 
+# Current Features
+Currently the following attacks can be detected on a network
+1. NBNS spoofing.  Typically from [Responder](https://github.com/lgandx/Responder)
+2. LLMNR spoofing. Typically from [Responder](https://github.com/lgandx/Responder)
+
+The next attacks that I plan on adding detection for are
+1. mDNS spooging. Typically from [Responder](https://github.com/lgandx/Responder)
+2. Port scanning. Typically from [NMap](https://github.com/nmap/nmap)
+
+If there are other network based attacks that you would like to see me add support for please feel free to reachout by opening an issue or pull request.
+
 # Instructions
 ## Quickstart
 If you just want to get up and running quickly you can use the following command.  With the defaults you will receive a test email when the program starts up.  Then you will receive an email each time a new attack is detected.  By default if a particular attack hasn't been detected for 1 hour it is considered over and you will receive a summay email.
@@ -22,7 +33,7 @@ docker run -it --net=host \
 -e EMAIL_RECIPIENT=address to receive alert emails \
 -v canary_logs:/usr/src/app/logs \
 -v canary_attacks:/usr/src/app/attacks \
-canarypidev/canarypi:latest
+macmondev/canarypi:latest
 ```
 
 ## Advanced Usage
@@ -71,5 +82,7 @@ For instance adding this would disable NBNS spoof detection
 
 # Credit
 I am building on the shoulders of giants.  Lots of credit to these guys who I 'borrowed' a lot of code from
+
 [Scapy](https://scapy.net/)
+
 [SpoofSpotter](https://github.com/NetSPI/SpoofSpotter)
