@@ -1,5 +1,5 @@
 # CanaryPi
-Startup project to create a simple to deploy honey pot style detection tool for alerting on common network attacks
+Startup project to create a simple to deploy honey pot style detection tool for alerting on common network attacks.  This is currently and early alpha build used for public testing and feedback while it's further developed.
 
 # Requirements
 This container requires the --net=host option when starting.  At the time of writing this that option is only supported in linux so this container will not work on Windows or Mac Os hosts.  This is because the scripts need to send broadcast packets to the host network.
