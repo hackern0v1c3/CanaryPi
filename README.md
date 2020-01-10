@@ -64,9 +64,9 @@ For instance adding this would disable NBNS spoof detection
 |EMAIL_SERVER_ADDRESS|False|smtp.gmail.com|The email server that the program will connect to for sending email notifications|
 |EMAIL_SERVER_PORT|False|587|The smtp port for the email server used to send notications|
 |EMAIL_SERVER_STARTTLS|False|True|Set to False if the email server does not require start tls.  Setting this to false sends your credentials in clear text and is considered insecure|
-|EMAIL_RECIPIENT|Requied if ENABLE_EMAIL_ALERTS is True||The email address that will receive any email notifications|
-|EMAIL_SENDER|Requied if ENABLE_EMAIL_ALERTS is True||The email address that will be used to send email notifications|
-|EMAIL_SENDER_PASSWORD|Requied if ENABLE_EMAIL_ALERTS is True and ENABLE_EMAIL_SERVER_AUTHENTICATION is set to True||The password for the email address used to send email notifications|
+|EMAIL_RECIPIENT|False||The email address that will receive any email notifications.  Only equied if ENABLE_EMAIL_ALERTS is True|
+|EMAIL_SENDER|False||The email address that will be used to send email notifications. Only requied if ENABLE_EMAIL_ALERTS is True|
+|EMAIL_SENDER_PASSWORD|False||The password for the email address used to send email notifications.  Only requied if ENABLE_EMAIL_ALERTS is True and ENABLE_EMAIL_SERVER_AUTHENTICATION is set to True|
 
 
 # Credit
