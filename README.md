@@ -20,7 +20,7 @@ If there are other network based attacks that you would like to see me add suppo
 
 # Instructions
 ## Quickstart
-If you just want to get up and running quickly you can use the following command.  With the defaults you will receive a test email when the program starts up.  Then you will receive an email each time a new attack is detected.  By default if a particular attack hasn't been detected for 1 hour it is considered over and you will receive a summay email.
+If you just want to get up and running quickly you can use the following command.  With the defaults you will receive a test email when the program starts up.  Then you will receive an email each time a new attack is detected.  By default if a particular attack hasn't been detected for 1 hour it is considered over and you will receive a summay email.  If you didn't specify that you do NOT want a startup email but you still didn't receive it there is likely something wrong with the email info you provided.  The log canarypi log file should contain some information on what went wrong.
 
 If you use the quickstart command below the logs will be located in /var/lib/docker/volumes/canary_logs/_data/.  These will contain a more detail history of the attacks that can be used for forensics.
 
@@ -29,9 +29,9 @@ The other volume /var/lib/docker/volumes/canary_logs/_data/ is just used for tem
 ```
 docker run -dit --net=host \
 --restart unless-stopped \
--e EMAIL_SENDER=address used to send alert emails \
--e EMAIL_SENDER_PASSWORD=password for account used to send emails \
--e EMAIL_RECIPIENT=address to receive alert emails \
+-e EMAIL_SENDER='address used to send alert emails' \
+-e EMAIL_SENDER_PASSWORD='password for account used to send emails' \
+-e EMAIL_RECIPIENT='address to receive alert emails' \
 -v canary_logs:/usr/src/app/logs \
 -v canary_attacks:/usr/src/app/attacks \
 macmondev/canarypi:latest
@@ -40,11 +40,13 @@ macmondev/canarypi:latest
 ## Advanced Usage
 There are a lot of optional params that can be passed to the container.  Any of the following params can be added to the docker startup command using 
 
-```-e paramname=paramvalue```  
+```-e paramname='paramvalue'```  
 
 For instance adding this would disable NBNS spoof detection
 
-```-e DISABLE_NBNS_SCANNING=True```
+```-e DISABLE_NBNS_SCANNING='True'```
+
+You don't need to wrap all of the param values in single quotes but it's a good idea, especially if the values contain special characters.
 
 ### Detection Related Parameters
 #### NBNS Params
