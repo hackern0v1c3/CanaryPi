@@ -38,15 +38,15 @@ def send_email(subject, message):
                 except smtplib.SMTPHeloError:
                     logger.error('Error sending mail: The server didn’t reply properly to the HELO greeting.')
                     server.quit()
-                    return
+                    return False
                 except smtplib.SMTPNotSupportedError:
                     logger.error('The server does not support the STARTTLS extension.')
                     server.quit()
-                    return
+                    return False
                 except RuntimeError:
                     logger.error('SSL/TLS support is not available to your Python interpreter.')
                     server.quit()
-                    return
+                    return False
                     
             if str(os.environ['ENABLE_EMAIL_SERVER_AUTHENTICATION']).lower()[0] == 't':
                 try:
@@ -54,19 +54,19 @@ def send_email(subject, message):
                 except smtplib.SMTPHeloError:
                     logger.error('Error sending mail: The server didn’t reply properly to the HELO greeting.')
                     server.quit()
-                    return
+                    return False
                 except smtplib.SMTPAuthenticationError:
                     logger.error('Error sending mail: Credentials refused.')
                     server.quit()
-                    return
+                    return False
                 except smtplib.SMTPNotSupportedError:
                     logger.error('Error sending mail: The AUTH command is not supported by the server.')
                     server.quit()
-                    return
+                    return False
                 except smtplib.SMTPException:
                     logger.error('Error sending mail: No suitable authentication method was found.')
                     server.quit()
-                    return
+                    return False
 
             body = '\r\n'.join(['To: %s' % os.environ['EMAIL_RECIPIENT'],
                     'From: %s' % os.environ['EMAIL_SENDER'],
@@ -78,13 +78,19 @@ def send_email(subject, message):
                 logger.info('Email sent')
             except smtplib.SMTPRecipientsRefused:
                 logger.error('Error sending mail: Email recipients refused.')
+                return False
             except smtplib.SMTPHeloError:
                 logger.error('Error sending mail: Server did not respond to HELO greeting.')
+                return False
             except smtplib.SMTPSenderRefused:
                 logger.error('Error sending mail: The sender address was refused.')
+                return False
             except smtplib.SMTPDataError:
                 logger.error('Error sending mail: The server replied with an unexpected error code.')
+                return False
 
             server.quit()
+            return True
     else:
         logger.debug('Email alerts are disabled')
+        return True
