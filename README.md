@@ -26,6 +26,8 @@ If you use the quickstart command below the logs will be located in /var/lib/doc
 
 The other volume /var/lib/docker/volumes/canary_logs/_data/ is just used for temporary files where attack info is stored during an attack.  When the attack is over the files in this folder are read into a summary and then delted.  You should use the logs, not these files, to look up attack history info.
 
+Note all times reported by Canarypi are currently in UTC
+
 ```
 docker run -dit --net=host \
 --restart unless-stopped \
