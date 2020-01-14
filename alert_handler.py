@@ -31,17 +31,32 @@ def work():
     logger.debug('Starting alert handler worker thread')
 
     # Make sure queue folder exists
-    os.makedirs('attacks',exist_ok=True)
+    root = os.getcwd()
+    attack_file_path = os.path.join(root, 'attacks')
+    os.makedirs(attack_file_path,exist_ok=True)
+
+    # Setup list to track which attacks have been alerted on
+    alerted = []
 
     while 1:
         # Get all existing file names for detected attacks
         existing_attack_files = []
 
         logger.debug('Fetching current attack file names')
-        with os.scandir('/usr/src/app/attacks') as file_names:
+        with os.scandir(attack_file_path) as file_names:
             for file_name in file_names:
                 if file_name.is_file():
                     existing_attack_files.append(file_name.name)
+
+                    # If any notifications haven't been sent for an attack file send it.
+                    if file_name.name not in alerted:
+                        attack_info = file_name.name.split('_')
+                        logger.debug('Sending notification email for new attack')
+                        email_body = f'{attack_info[0]} attack detected from ip {attack_info[1]} mac {attack_info[2]}\n'
+                        email_body += f'See CanaryPi logs for more detail.'
+
+                        if emailer.send_email("CanaryPi Attack Detected", email_body):
+                            alerted.append(file_name.name)
 
         for _ in range(len(new_alerts)):
             # Grab the most recent alert out of the new_alerts list
@@ -54,27 +69,30 @@ def work():
             attacker_ip = alert[1]
             attacker_mac = alert[2]
             alert_name = "_".join(alert)
-            file_name = '/usr/src/app/attacks/' + alert_name
+            attack_file_name = os.path.join(attack_file_path, alert_name)
 
-            # if new attack_type, source_ip or source_mac
+            # If new attack_type, source_ip or source_mac then create temporary attack file
             if alert_name not in existing_attack_files:
-                logger.debug('Sending notification email for new attack')
-                email_body = f'Attack detected from ip {attacker_ip} mac {attacker_mac}\n'
-                email_body += f'{message}'
-                emailer.send_email("CanaryPi Attack Detected", email_body)
-
                 logger.debug('Writing new attack file')
-                with open(file_name, 'w') as f:
-                    f.write(f'{datetime.now().strftime("%Y/%m/%d %H:%M:%S")} - {message} from ip {alert[1]} mac {alert[2]}\n')
+                with open(attack_file_name, 'w') as f:
+                    f.write(f'{datetime.now().strftime("%Y/%m/%d %H:%M:%S")} - {message} from ip {attacker_ip} mac {attacker_mac}\n')
                     existing_attack_files.append(alert_name)
+
+                    logger.debug('Sending notification email for new attack')
+                    email_body = f'Attack detected from ip {attacker_ip} mac {attacker_mac}\n'
+                    email_body += f'{message}'
+
+                    if emailer.send_email("CanaryPi Attack Detected", email_body):
+                        alerted.append(alert_name)
+
+            # Otherwise append to the existing one.
             else:
-                # append to existing on disk queue with message and timestamp
                 logger.debug('Appending to attack file')
-                with open(file_name, 'a') as f:
+                with open(attack_file_name, 'a') as f:
                     f.write(f'{datetime.now().strftime("%Y/%m/%d %H:%M:%S")} - {message} from ip {alert[1]} mac {alert[2]}\n')
 
         # for each on disk que get the last written to time/date
-        with os.scandir('/usr/src/app/attacks') as file_names:
+        with os.scandir(attack_file_path) as file_names:
             for file_name in file_names:
                 if file_name.is_file():
                     # compare most recent activity to attack timeout time
@@ -88,9 +106,10 @@ def work():
                         with open(file_name, 'r') as f:
                             lines = f.readlines()
 
-                        start_time = lines[0].split("-")[0]
+                        line_parts = lines[0].split("-", 1)
+                        start_time = line_parts[0]
                         end_time = lines[len(lines) - 1].split("-")[0]
-                        attack_details = lines[0].split("-")[1].split(" ")
+                        attack_details = line_parts[1].split(" ")
                         attack_type = attack_details[1]
                         attacker_ip = attack_details[7]
                         attacker_mac = attack_details[9]
@@ -104,10 +123,12 @@ def work():
 
                         # Send email alert with summary
                         logger.debug(f'Sending email because attack is considered over {str(time_since_modified)} is greater than {attack_duration}')
-                        emailer.send_email("CanaryPi Attack Ended", message)
+                        if emailer.send_email("CanaryPi Attack Ended", message):
+                            # Delete file from disk
+                            os.remove(file_name)
 
-                        # Delete file from disk
-                        os.remove(file_name)
+                            # Remove item from alerted list
+                            alerted.remove(file_name.name)
 
         # sleep x seconds
         # remember this is hard coded
