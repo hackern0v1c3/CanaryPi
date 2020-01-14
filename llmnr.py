@@ -31,6 +31,7 @@ def sender():
         query_name = generate_name()
         pkt = IP(dst=DESTINATION_IP, ttl=1)/UDP(sport=source_port,dport=5355)/LLMNRQuery(id=id, qr=0, qdcount=1, ancount=0, nscount=0, arcount=0, qd=DNSQR(qname=query_name))
 
+        logger.debug(f'Sending LLMNR spoofed packet')
         send (pkt, verbose=0)
         time.sleep(SLEEP_TIME)
 

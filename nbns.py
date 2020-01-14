@@ -43,6 +43,7 @@ def sender():
     while 1:
         query_name = generate_name()
         pkt = IP(dst=BROADCAST_IP)/UDP(sport=137, dport='netbios_ns')/NBNSQueryRequest(SUFFIX="file server service",QUESTION_NAME=query_name, QUESTION_TYPE='NB')
+        logger.debug(f'Sending NBNS spoofed packet')
         send (pkt, verbose=0)
         time.sleep(SLEEP_TIME)
 
