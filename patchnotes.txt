@@ -1,1 +1,5 @@
+v0.2: Updated Readme to mention UTC, quoting params, and other misc.
+      Added tracking of succesfully sent alerts so they are sent once per startup of the program.
+      Added initial syslog support
+
 v0.1: Initial version.  Does NBNS and LLMNR spoof detection, email alerting, and logging
