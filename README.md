@@ -70,6 +70,11 @@ You don't need to wrap all of the param values in single quotes but it's a good 
 |CONSOLE_LOG_LEVEL|False|warning|Set the docker console logging level.  Supported values are debug, info, warning, error, and critical.  At least warning must be set to report on detected attacks|
 |FILE_LOG_LEVEL|False|warning|Set logging level for the log files.  Supported values are debug, info, warning, error, and critical.  At least warning must be set to report on detected attacks|
 |FILE_LOG_RETENTION|False|30|How many days of rotating log files to keep|
+|SYSLOG_ENABLED|False|False|Set to true to enable syslog logging|
+|SYSLOG_ADDRESS|False|null|The ip address of the syslog server.  Required if SYSLOG_ENABLED is True|
+|SYSLOG_PORT|False|514|The port that the syslog server is listening on|
+|SYSLOG_TCP|False|False|Set to false for UDP syslog server or True for TCP syslog server|
+|SYSLOG_LOG_LEVEL|False|warning|The level of logs to be sent to the syslog server.  Supported values are debug, info, warning, error, and critical.  At least warning must be set to report on detected attacks|
 
 #### Email Related Parameters
 | Name | Required | Default Value | Description |
