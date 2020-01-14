@@ -50,6 +50,8 @@ For instance adding this would disable NBNS spoof detection
 
 You don't need to wrap all of the param values in single quotes but it's a good idea, especially if the values contain special characters.
 
+Specific logging levels can be set for console, file, and syslog.  This allows for logging as much, or as little information, as you want.  Console log settings control what will go into the docker logs.  File log settings control what will go into a daily rotating log file on disk.  Syslog log settings are useful for sending logs to a SIEM or other central logging system.
+
 ### Detection Related Parameters
 #### NBNS Params
 | Name | Required | Default Value | Description |
