@@ -11,10 +11,12 @@ I'm hoping to take some pre-existing tools and techniques for detecting common n
 Currently the following attacks can be detected on a network
 1. NBNS spoofing.  Typically from [Responder](https://github.com/lgandx/Responder)
 2. LLMNR spoofing. Typically from [Responder](https://github.com/lgandx/Responder)
+3. TCP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
 
 The next attacks that I plan on adding detection for are
-1. mDNS spooging. Typically from [Responder](https://github.com/lgandx/Responder)
-2. Port scanning. Typically from [NMap](https://github.com/nmap/nmap)
+1. mDNS spoofing. Typically from [Responder](https://github.com/lgandx/Responder)
+2. Rogue ipv6 dhcp server detection. Typically from [MITM6](https://github.com/fox-it/mitm6)
+3. UDP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
 
 If there are other network based attacks that you would like to see me add support for please feel free to reachout by opening an issue or pull request.
 
@@ -65,6 +67,12 @@ Specific logging levels can be set for console, file, and syslog.  This allows f
 |------|----------|---------------|-------------|
 |DISABLE_LLMNR_SCANNING|False|False|Set to True if you do not want to try and detect LLMNR spoofing|
 |LLMNR_SLEEP|False|30|Determines how ofter the network is checked for LLMNR spoofing|
+
+#### Port Scan Detection Params
+| Name | Required | Default Value | Description |
+|------|----------|---------------|-------------|
+|DISABLE_PORTSCAN_DETECTION|False|False|Set to True if you do not want to try and detect port scan attacks|
+|PORTSCAN_TCP_PORTS|False|'21, 25, 80, 110, 143, 443, 445, 465, 3389'|Set to a comma seperated list of port numbers.  If anything on the network attempts to connect to any of these TCP ports you should be alerted and the connection info logged|
 
 #### Logging Related Params
 | Name | Required | Default Value | Description |
