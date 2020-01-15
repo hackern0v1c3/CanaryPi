@@ -3,6 +3,7 @@ import os
 import logger
 import nbns
 import llmnr
+import port_scan
 import emailer
 import alert_handler
 
@@ -26,3 +27,6 @@ if str(os.environ['DISABLE_NBNS_SCANNING']).lower()[0] != 't':
 if str(os.environ['DISABLE_LLMNR_SCANNING']).lower()[0] != 't':
     llmnr.init()
 
+# If enabled start port scan detection
+if str(os.environ['DISABLE_PORTSCAN_DETECTION']).lower()[0] != 't':
+    port_scan.init()
