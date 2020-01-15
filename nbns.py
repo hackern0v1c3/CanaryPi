@@ -66,14 +66,10 @@ def listen():
 # Main function
 def init():
     try:
-        try:
-            logger.info("Starting NBNS UDP Response Server...")
-            threading.Thread(target=listen).start()
-            logger.info("Starting NBNS Request Thread...")
-            threading.Thread(target=sender).start()
-        except:
-            logger.error("Server could not be started, confirm you're running this as root.\n")
-            exit(1)
+        logger.info("Starting NBNS UDP Response Server...")
+        threading.Thread(target=listen).start()
+        logger.info("Starting NBNS Request Thread...")
+        threading.Thread(target=sender).start()
     except:
         logger.error("Server could not be started, confirm you're running this as root.\n")
         exit(1)
