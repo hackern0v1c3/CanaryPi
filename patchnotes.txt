@@ -1,3 +1,6 @@
+v0.3: Added tcp port scan detection
+      Othe minor bug fixes and cleanup
+
 v0.2: Updated Readme to mention UTC, quoting params, and other misc.
       Added tracking of succesfully sent alerts so they are sent once per startup of the program.
       Added initial syslog support
