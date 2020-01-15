@@ -1,1 +1,2 @@
+netifaces==0.10.9
 scapy==2.4.3
