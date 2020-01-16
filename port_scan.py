@@ -58,9 +58,14 @@ def build_port_string(ports):
 
 # Handler for incoming responses
 def get_packet(pkt):
-    logger.warning(f'Port scan detected: Mac address {pkt.getlayer(Ether).src} with IP address of {pkt.getlayer(IP).src} tried connecting to {pkt.getlayer(IP).dst}:{pkt.getlayer(IP).dport} ')
+    src_mac = pkt.getlayer(Ether).src
+    src_ip = pkt.getlayer(IP).src
+    dst_ip = pkt.getlayer(IP).dst
+    dst_port = pkt.getlayer(IP).dport
+
+    logger.warning(f'Port scan detected: Mac address {src_mac} with IP address of {src_ip} tried connecting to {dst_ip}:{dst_port} ')
     # Send message to alert handler
-    alert_handler.new_alert("portscan", pkt.getlayer(IP).src, pkt.getlayer(Ether).src, f'Portscan connection request sent to {pkt.getlayer(IP).dst}:{pkt.getlayer(IP).dport}')
+    alert_handler.new_alert(f'portscan{dst_port}', src_ip, src_mac, f'Portscan connection request sent to {dst_ip}:{dst_port}')
 
 #Function for starting sniffing
 def listen():
