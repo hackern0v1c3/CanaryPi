@@ -22,7 +22,7 @@ If there are other network based attacks that you would like to see me add suppo
 
 # Instructions
 ## Quickstart
-If you just want to get up and running quickly you can use the following command.  With the defaults you will receive a test email when the program starts up.  Then you will receive an email each time a new attack is detected.  By default if a particular attack hasn't been detected for 1 hour it is considered over and you will receive a summay email.  If you didn't specify that you do NOT want a startup email but you still didn't receive it there is likely something wrong with the email info you provided.  The log canarypi log file should contain some information on what went wrong.
+If you just want to get up and running quickly you can use the following command.  With the defaults you will receive a test email when the program starts up.  Then you will receive an email each time a new attack is detected.  By default if a particular attack hasn't been detected for 10 minutes it is considered over and you will receive a summay email.  This time limit can be changed to whatever you want, just see the optional params tables below.  If you didn't specify that you do NOT want a startup email but you still didn't receive it there is likely something wrong with the email info you provided.  The canarypi log file should contain some information on what went wrong.
 
 If you use the quickstart command below the logs will be located in /var/lib/docker/volumes/canary_logs/_data/.  These will contain a more detail history of the attacks that can be used for forensics.
 
@@ -42,7 +42,7 @@ macmondev/canarypi:latest
 ```
 
 ## Advanced Usage
-There are a lot of optional params that can be passed to the container.  Any of the following params can be added to the docker startup command using 
+There are a lot of optional params that can be passed to the container.  Just see the parameter tables below.  Any of the params can be added to the docker startup command using 
 
 ```-e paramname='paramvalue'```  
 
@@ -54,6 +54,39 @@ You don't need to wrap all of the param values in single quotes but it's a good 
 
 Specific logging levels can be set for console, file, and syslog.  This allows for logging as much, or as little information, as you want.  Console log settings control what will go into the docker logs.  File log settings control what will go into a daily rotating log file on disk.  Syslog log settings are useful for sending logs to a SIEM or other central logging system.
 
+## Using Docker Compose
+[Docker compose](https://docs.docker.com/compose/) can be a nice clean way to manage docker containers.  You can put your CanaryPi settings into a docker-compose file to make updating to new versions super simple.  Here are some quickstart docker-compose setup instructions.
+
+1. [Install docker compose](https://docs.docker.com/compose/install/)
+2. Create a folder named CanaryPi to hold your docker-compose file.
+3. Create a docker-compose.yml file in the new folder.  It should look similar to this.  You can use any optional param from the tables below just like you can in a regular docker run command.  Just add them to the environment section.  Note this example stores the password in the docker-compose file.  It's better to use [docker secrets](https://docs.docker.com/engine/swarm/secrets/) but takes a little bit more setup time.
+```
+Version: '3'
+services:
+  canarypi:
+    image: macmondev/canarypi:latest
+    container_name: canarypi
+    restart: unless-stopped
+    environment:
+      - EMAIL_SENDER='address used to send alert emails'
+      - EMAIL_SENDER_PASSWORD='password for account used to send emails'
+      - EMAIL_RECIPIENT='address to receive alert emails'
+    volumes:
+      - canary_logs:/usr/src/app/logs
+      - canary_attacks:/usr/src/app/attacks
+    network_mode: 'host'
+
+volumes:
+  canary_logs:
+  canary_attacks:
+```
+4. Now to start the container just cd into the same folder as the docker-compose.yml file and type ```docker-compose up -d``` and the container will be spun up in the background with the settings you defined.
+5. To update to a new version of CanaryPi just change back into the same folder and run these commands
+    * ```docker-compose down``` stops the container
+    * ```docker-compose pull``` pulls new version
+    * ```docker-compose up -d``` starts the container with all the same settings using the new version!  No need to keep referencing your startup commands and options.
+
+## Parameters
 ### Detection Related Parameters
 #### NBNS Params
 | Name | Required | Default Value | Description |
@@ -103,7 +136,7 @@ Specific logging levels can be set for console, file, and syslog.  This allows f
 #### Misc Parameters
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
-|ATTACK_TIMEOUT_DURATION|False|3600|The ammount of innactivity time, in seconds, before an attack is considered over.  So by default if an attack was started, but hasn't been detected for over an hour, it is considered over.  You will be notified based on your logging and email settings.|
+|ATTACK_TIMEOUT_DURATION|False|600|The ammount of innactivity time, in seconds, before an attack is considered over.  So by default if an attack was started, but hasn't been detected for over ten minutes, it is considered over.  You will be notified based on your logging and email settings.|
 
 # Credit
 I am building on the shoulders of giants.  Lots of credit to these guys who I 'borrowed' a lot of code from
@@ -111,3 +144,5 @@ I am building on the shoulders of giants.  Lots of credit to these guys who I 'b
 [Scapy](https://scapy.net/)
 
 [SpoofSpotter](https://github.com/NetSPI/SpoofSpotter)
+
+[The 7ms community for all of their ideas, testing, and feedback](https://7ms.us/)
