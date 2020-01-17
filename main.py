@@ -3,6 +3,7 @@ import os
 import logger
 import nbns
 import llmnr
+import mdns
 import port_scan
 import emailer
 import alert_handler
@@ -26,6 +27,10 @@ if str(os.environ['DISABLE_NBNS_SCANNING']).lower()[0] != 't':
 # If enabled start llmnr spoof detection
 if str(os.environ['DISABLE_LLMNR_SCANNING']).lower()[0] != 't':
     llmnr.init()
+
+# If enabled start mdns spoof detection
+if str(os.environ['DISABLE_MDNS_SCANNING']).lower()[0] != 't':
+    mdns.init()
 
 # If enabled start port scan detection
 if str(os.environ['DISABLE_PORTSCAN_DETECTION']).lower()[0] != 't':
