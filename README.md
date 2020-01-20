@@ -11,12 +11,12 @@ I'm hoping to take some pre-existing tools and techniques for detecting common n
 Currently the following attacks can be detected on a network
 1. NBNS spoofing.  Typically from [Responder](https://github.com/lgandx/Responder)
 2. LLMNR spoofing. Typically from [Responder](https://github.com/lgandx/Responder)
-3. TCP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
+3. mDNS spoofing. Typically from [Responder](https://github.com/lgandx/Responder)
+4. TCP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
 
 The next attacks that I plan on adding detection for are
-1. mDNS spoofing. Typically from [Responder](https://github.com/lgandx/Responder)
-2. Rogue ipv6 dhcp server detection. Typically from [MITM6](https://github.com/fox-it/mitm6)
-3. UDP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
+1. Rogue ipv6 dhcp server detection. Typically from [MITM6](https://github.com/fox-it/mitm6)
+2. UDP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
 
 If there are other network based attacks that you would like to see me add support for please feel free to reachout by opening an issue or pull request.
 
@@ -101,6 +101,12 @@ volumes:
 |DISABLE_LLMNR_SCANNING|False|False|Set to True if you do not want to try and detect LLMNR spoofing|
 |LLMNR_SLEEP|False|30|Determines how ofter the network is checked for LLMNR spoofing|
 
+#### mDNS Params
+| Name | Required | Default Value | Description |
+|------|----------|---------------|-------------|
+|DISABLE_MDNS_SCANNING|False|False|Set to True if you do not want to try and detect mDNS spoofing|
+|MDNS_SLEEP|False|30|Determines how ofter the network is checked for mDNS spoofing|
+
 #### Port Scan Detection Params
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
@@ -132,7 +138,6 @@ volumes:
 |EMAIL_SENDER|False||The email address that will be used to send email notifications. Only requied if ENABLE_EMAIL_ALERTS is True|
 |EMAIL_SENDER_PASSWORD|False||The password for the email address used to send email notifications.  Only requied if ENABLE_EMAIL_ALERTS is True and ENABLE_EMAIL_SERVER_AUTHENTICATION is set to True|
 
-
 #### Misc Parameters
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
@@ -144,5 +149,7 @@ I am building on the shoulders of giants.  Lots of credit to these guys who I 'b
 [Scapy](https://scapy.net/)
 
 [SpoofSpotter](https://github.com/NetSPI/SpoofSpotter)
+
+[mdns_recon](https://github.com/chadillac/mdns_recon)
 
 [The 7ms community for all of their ideas, testing, and feedback](https://7ms.us/)
