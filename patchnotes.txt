@@ -1,3 +1,5 @@
+v0.6: Added rogue dhcpv6 detection
+
 v0.5: Added mdns detection
 
 v0.4: Changed port scan detection so each port is considered a different attack and is alerted on
