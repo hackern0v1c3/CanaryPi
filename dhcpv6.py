@@ -8,9 +8,13 @@ import random
 import string
 import logger
 import alert_handler
+import ipaddress
+import os
 
 import codecs
 decode_hex = codecs.getdecoder("hex_codec")
+
+server_whitelist = []
 
 #Function to generate the pieces for a random mac address
 def generate_mac_pieces():
@@ -89,6 +93,9 @@ def get_packet(pkt):
         return
     
     src_ip = pkt.getlayer(IPv6).src
+    if src_ip in server_whitelist:
+        return
+
     src_mac = pkt.getlayer(Ether).src
 
     logger.warning(f'A DHCPv6 Server has been detected on your network at {src_ip} - {src_mac}')
@@ -100,6 +107,16 @@ def listen():
 
 # Main function
 def init():
+    if os.environ['DHCPV6_WHITELIST'] != "":
+        try:
+            whitelist = os.environ['DHCPV6_WHITELIST'].split(",")
+
+            for server in whitelist:
+                ipaddress.IPv6Address(server.strip())
+                server_whitelist.append(server.strip())
+        except:
+            logger.error("Could not parse DHCP whitelist.  It must be a comma seperated list of ipv6 addresses")
+            exit(1)
     try:
         logger.info("Starting DHCPv6 Response Server...")
         threading.Thread(target=listen).start()
