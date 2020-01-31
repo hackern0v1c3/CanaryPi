@@ -13,10 +13,10 @@ Currently the following attacks can be detected on a network
 2. LLMNR spoofing. Typically from [Responder](https://github.com/lgandx/Responder)
 3. mDNS spoofing. Typically from [Responder](https://github.com/lgandx/Responder)
 4. TCP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
+5. Rogue ipv6 dhcp server detection. Typically from [MITM6](https://github.com/fox-it/mitm6)
 
 The next attacks that I plan on adding detection for are
-1. Rogue ipv6 dhcp server detection. Typically from [MITM6](https://github.com/fox-it/mitm6)
-2. UDP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
+1. UDP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
 
 If there are other network based attacks that you would like to see me add support for please feel free to reachout by opening an issue or pull request.
 
@@ -107,6 +107,13 @@ volumes:
 |DISABLE_MDNS_SCANNING|False|False|Set to True if you do not want to try and detect mDNS spoofing|
 |MDNS_SLEEP|False|30|Determines how ofter the network is checked for mDNS spoofing|
 
+#### DHCPv6 Params
+| Name | Required | Default Value | Description |
+|------|----------|---------------|-------------|
+|DISABLE_DHCPV6_DETECTION|False|False|Set to True if you do not want to try and detect DHCPv6 servers|
+|DHCPV6_WHITELIST|False|null|By default this program will alert you about every DHCPv6 server on your network.  If there are valid DHCPv6 servers that you do not want to receive alerts for provide a comma seperated list of IPv6 addresses|
+|DHCPV6_SLEEP|False|30|Determines how ofter the network is checked for DHCPv6 servers|
+
 #### Port Scan Detection Params
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
@@ -151,5 +158,7 @@ I am building on the shoulders of giants.  Lots of credit to these guys who I 'b
 [SpoofSpotter](https://github.com/NetSPI/SpoofSpotter)
 
 [mdns_recon](https://github.com/chadillac/mdns_recon)
+
+[cciethebeginning](https://cciethebeginning.wordpress.com/2012/01/27/dhcpv6-fake-attack/)
 
 [The 7ms community for all of their ideas, testing, and feedback](https://7ms.us/)
