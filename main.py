@@ -5,6 +5,7 @@ import nbns
 import llmnr
 import mdns
 import port_scan
+import dhcpv6
 import emailer
 import alert_handler
 
@@ -35,3 +36,7 @@ if str(os.environ['DISABLE_MDNS_SCANNING']).lower()[0] != 't':
 # If enabled start port scan detection
 if str(os.environ['DISABLE_PORTSCAN_DETECTION']).lower()[0] != 't':
     port_scan.init()
+
+# If enabled start dhcpv6 detection
+if str(os.environ['DISABLE_DHCPV6_DETECTION']).lower()[0] != 't':
+    dhcpv6.init()
