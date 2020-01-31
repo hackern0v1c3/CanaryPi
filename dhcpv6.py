@@ -81,29 +81,28 @@ def sender():
         time.sleep(SLEEP_TIME)
 
         logger.debug(f'Sending DHCPv6 solicit packet')
-        ans=srp1(pkt,verbose=0,timeout=2)
+        sendp (pkt,verbose=0)
 
-        if ans is None:
-            continue
-        elif ans.haslayer(ICMP):
-            continue
-        else:
-            got_packet(ans)
-
-# Handler for incoming responses
-def got_packet(pkt):
+# Handler for incoming DHCPV6 responses
+def get_packet(pkt):
     if not pkt.getlayer(DHCP6_Advertise):
         return
-
-    src_ip = pkt.getlayer(IP).src
+    
+    src_ip = pkt.getlayer(IPv6).src
     src_mac = pkt.getlayer(Ether).src
 
     logger.warning(f'A DHCPv6 Server has been detected on your network at {src_ip} - {src_mac}')
-    alert_handler.new_alert("dhcpv6", src_ip, src_mac, f'DHCPv6 server detected.  Possible mitm6 attack')
+    alert_handler.new_alert("dhcpv6", src_ip, src_mac, f'DHCPv6 server detected {src_ip}')
+
+#Function for starting sniffing
+def listen():
+    sniff(filter="udp and port 546",store=0,prn=get_packet)
 
 # Main function
 def init():
     try:
+        logger.info("Starting DHCPv6 Response Server...")
+        threading.Thread(target=listen).start()
         logger.info("Starting DHCPv6 Request Thread...")
         threading.Thread(target=sender).start()
     except:
