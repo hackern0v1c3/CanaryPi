@@ -1,6 +1,6 @@
 FROM python:3
 
-ENV VERSION="0.5"
+ENV VERSION="0.6"
 
 RUN apt-get update && apt-get install -y --no-install-recommends tcpdump && rm -rf /var/lib/apt/lists/*
 
