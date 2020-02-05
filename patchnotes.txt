@@ -1,3 +1,5 @@
+v0.7: Changed detection method for mdns to prevent false possitives
+
 v0.6: Added rogue dhcpv6 detection
 
 v0.5: Added mdns detection
