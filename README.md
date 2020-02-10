@@ -18,15 +18,15 @@ Currently the following attacks can be detected on a network
 The next attacks that I plan on adding detection for are
 1. UDP port scanning. Typically from [NMap](https://github.com/nmap/nmap)
 
-If there are other network based attacks that you would like to see me add support for please feel free to reachout by opening an issue or pull request.
+If there are other network based attacks that you would like to see me add support for please feel free to reach out by opening an issue or pull request.
 
 # Instructions
 ## Quickstart
-If you just want to get up and running quickly you can use the following command.  With the defaults you will receive a test email when the program starts up.  Then you will receive an email each time a new attack is detected.  By default if a particular attack hasn't been detected for 10 minutes it is considered over and you will receive a summay email.  This time limit can be changed to whatever you want, just see the optional params tables below.  If you didn't specify that you do NOT want a startup email but you still didn't receive it there is likely something wrong with the email info you provided.  The canarypi log file should contain some information on what went wrong.
+If you just want to get up and running quickly you can use the following command.  With the defaults you will receive a test email when the program starts up.  Then you will receive an email each time a new attack is detected.  By default if a particular attack hasn't been detected for 10 minutes it is considered over and you will receive a summary email.  This time limit can be changed to whatever you want, just see the optional params tables below.  If you didn't specify that you do NOT want a startup email but you still didn't receive it there is likely something wrong with the email info you provided.  The canarypi log file should contain some information on what went wrong.
 
 If you use the quickstart command below the logs will be located in /var/lib/docker/volumes/canary_logs/_data/.  These will contain a more detail history of the attacks that can be used for forensics.
 
-The other volume /var/lib/docker/volumes/canary_logs/_data/ is just used for temporary files where attack info is stored during an attack.  When the attack is over the files in this folder are read into a summary and then delted.  You should use the logs, not these files, to look up attack history info.
+The other volume /var/lib/docker/volumes/canary_logs/_data/ is just used for temporary files where attack info is stored during an attack.  When the attack is over the files in this folder are read into a summary and then deleted.  You should use the logs, not these files, to look up attack history info.
 
 Note all times reported by Canarypi are currently in UTC
 
@@ -93,32 +93,32 @@ volumes:
 |------|----------|---------------|-------------|
 |DISABLE_NBNS_SCANNING|False|False|Set to True if you do not want to try and detect NBNS spoofing|
 |BROADCAST_IP|False|224.0.0.252|By default this program will send nbns requests to the multicast address 224.0.0.252 which is not protocol compliant but has worked in testing.  For better detection set this value to the actual broadcast address of your network.  Like 192.168.1.255|
-|NBNS_SLEEP|False|30|Determines how ofter the network is checked for NBNS spoofing|
+|NBNS_SLEEP|False|30|Determines how often the network is checked for NBNS spoofing|
 
 #### LLMNR Params
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
 |DISABLE_LLMNR_SCANNING|False|False|Set to True if you do not want to try and detect LLMNR spoofing|
-|LLMNR_SLEEP|False|30|Determines how ofter the network is checked for LLMNR spoofing|
+|LLMNR_SLEEP|False|30|Determines how often the network is checked for LLMNR spoofing|
 
 #### mDNS Params
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
 |DISABLE_MDNS_SCANNING|False|False|Set to True if you do not want to try and detect mDNS spoofing|
-|MDNS_SLEEP|False|30|Determines how ofter the network is checked for mDNS spoofing|
+|MDNS_SLEEP|False|30|Determines how often the network is checked for mDNS spoofing|
 
 #### DHCPv6 Params
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
 |DISABLE_DHCPV6_DETECTION|False|False|Set to True if you do not want to try and detect DHCPv6 servers|
-|DHCPV6_WHITELIST|False|null|By default this program will alert you about every DHCPv6 server on your network.  If there are valid DHCPv6 servers that you do not want to receive alerts for provide a comma seperated list of IPv6 addresses|
-|DHCPV6_SLEEP|False|30|Determines how ofter the network is checked for DHCPv6 servers|
+|DHCPV6_WHITELIST|False|null|By default this program will alert you about every DHCPv6 server on your network.  If there are valid DHCPv6 servers that you do not want to receive alerts for provide a comma separated list of IPv6 addresses|
+|DHCPV6_SLEEP|False|30|Determines how often the network is checked for DHCPv6 servers|
 
 #### Port Scan Detection Params
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
 |DISABLE_PORTSCAN_DETECTION|False|False|Set to True if you do not want to try and detect port scan attacks|
-|PORTSCAN_TCP_PORTS|False|'21, 25, 80, 110, 143, 443, 445, 465, 3389'|Set to a comma seperated list of port numbers.  If anything on the network attempts to connect to any of these TCP ports you should be alerted and the connection info logged|
+|PORTSCAN_TCP_PORTS|False|'21, 25, 80, 110, 143, 443, 445, 465, 3389'|Set to a comma separated list of port numbers.  If anything on the network attempts to connect to any of these TCP ports you should be alerted and the connection info logged|
 
 #### Logging Related Params
 | Name | Required | Default Value | Description |
@@ -139,16 +139,16 @@ volumes:
 |ENABLE_EMAIL_STARTUP_TEST|False|True|If set to False the program wont send an email on startup.|
 |ENABLE_EMAIL_SERVER_AUTHENTICATION|False|True|If set to false the program wont attempt to login to the smtp server when sending emails.  Useful if using an anonymous relay.|
 |EMAIL_SERVER_ADDRESS|False|smtp.gmail.com|The email server that the program will connect to for sending email notifications|
-|EMAIL_SERVER_PORT|False|587|The smtp port for the email server used to send notications|
+|EMAIL_SERVER_PORT|False|587|The smtp port for the email server used to send notifications|
 |EMAIL_SERVER_STARTTLS|False|True|Set to False if the email server does not require start tls.  Setting this to false sends your credentials in clear text and is considered insecure|
-|EMAIL_RECIPIENT|False||The email address that will receive any email notifications.  Only equied if ENABLE_EMAIL_ALERTS is True|
-|EMAIL_SENDER|False||The email address that will be used to send email notifications. Only requied if ENABLE_EMAIL_ALERTS is True|
-|EMAIL_SENDER_PASSWORD|False||The password for the email address used to send email notifications.  Only requied if ENABLE_EMAIL_ALERTS is True and ENABLE_EMAIL_SERVER_AUTHENTICATION is set to True|
+|EMAIL_RECIPIENT|False||The email address that will receive any email notifications. Only required if ENABLE_EMAIL_ALERTS is True|
+|EMAIL_SENDER|False||The email address that will be used to send email notifications. Only required if ENABLE_EMAIL_ALERTS is True|
+|EMAIL_SENDER_PASSWORD|False||The password for the email address used to send email notifications.  Only required if ENABLE_EMAIL_ALERTS is True and ENABLE_EMAIL_SERVER_AUTHENTICATION is set to True|
 
 #### Misc Parameters
 | Name | Required | Default Value | Description |
 |------|----------|---------------|-------------|
-|ATTACK_TIMEOUT_DURATION|False|600|The ammount of innactivity time, in seconds, before an attack is considered over.  So by default if an attack was started, but hasn't been detected for over ten minutes, it is considered over.  You will be notified based on your logging and email settings.|
+|ATTACK_TIMEOUT_DURATION|False|600|The amount of inactivity time, in seconds, before an attack is considered over.  So by default if an attack was started, but hasn't been detected for over ten minutes, it is considered over.  You will be notified based on your logging and email settings.|
 
 # Credit
 I am building on the shoulders of giants.  Lots of credit to these guys who I 'borrowed' a lot of code from
