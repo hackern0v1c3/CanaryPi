@@ -1,3 +1,5 @@
+v0.8: Updated python modules to clean up warnings from netaddr
+
 v0.7: Changed detection method for mdns to prevent false possitives
 
 v0.6: Added rogue dhcpv6 detection
