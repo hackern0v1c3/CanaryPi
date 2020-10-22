@@ -65,7 +65,7 @@ def get_packet(pkt):
 
     logger.warning(f'Port scan detected: Mac address {src_mac} with IP address of {src_ip} tried connecting to {dst_ip}:{dst_port} ')
     # Send message to alert handler
-    alert_handler.new_alert(f'portscan{dst_port}', src_ip, src_mac, f'Portscan connection request sent to {dst_ip}:{dst_port}')
+    alert_handler.new_alert(f'portscan {dst_port}', src_ip, src_mac, f'Portscan connection request sent to {dst_ip}:{dst_port}')
 
 #Function for starting sniffing
 def listen():
